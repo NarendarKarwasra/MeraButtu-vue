@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+    --color-primary: #ff7a03;
+    /* orange - CTAs, active states */
+    --color-secondary: #02b6b4;
+    /* teal - secondary accents */
+    --color-accent: #ffb302;
+    /* yellow - highlights, top bar */
+    --color-coral: #ff6054;
+    /* coral/red - badges, offers */
+    --color-brown: #482205;
+    /* dark brown - text */
+
+
+    --color-primary-light: #ffe8e2;
+}
