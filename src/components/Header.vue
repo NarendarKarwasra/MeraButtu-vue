@@ -60,15 +60,6 @@ const mobileMenuOpen = ref(false)
     <!-- Main Header -->
     <div class="bg-white">
       <div class="mx-auto max-w-350 px-2 py-2 flex items-center gap-4 sm:gap-6 justify-between">
-        <!-- Mobile menu toggle -->
-        <button
-          class="lg:hidden text-brown text-2xl shrink-0"
-          @click="mobileMenuOpen = !mobileMenuOpen"
-          aria-label="Toggle menu"
-        >
-          <i class="bi" :class="mobileMenuOpen ? 'bi-x-lg' : 'bi-list'"></i>
-        </button>
-
         <div class="flex items-center gap-4 sm:gap-6 justify-between flex-1 max-w-4xl">
           <!-- Logo -->
           <a href="/" class="flex items-center gap-2 shrink-0">
@@ -98,10 +89,10 @@ const mobileMenuOpen = ref(false)
         </div>
 
         <!-- Right actions -->
-        <div class="flex items-center gap-4 sm:gap-6 shrink-0">
+        <div class="flex items-center gap-4 sm:gap-4 lg:gap-10">
           <!-- Mobile search icon -->
-          <button class="md:hidden text-black text-xl" aria-label="Search">
-            <i class="bi bi-search"></i>
+          <button class="md:hidden text-black text-3xl" aria-label="Search">
+            <i class="bi bi-person"></i>
           </button>
 
           <!-- Account -->
@@ -109,9 +100,9 @@ const mobileMenuOpen = ref(false)
             href="#"
             class="hidden sm:flex items-center gap-2 hover:text-primary transition-colors"
           >
-            <i class="bi bi-person text-2xl"></i>
+            <i class="bi bi-person text-3xl"></i>
             <span class="leading-tight text-left">
-              <span class="block text-[11px] text-gray-500">Login / Signup</span>
+              <span class="block text-[12px] text-gray-700">Login / Signup</span>
               <span class="flex items-center gap-1 text-sm font-medium">
                 My Account
                 <i class="bi bi-chevron-down text-xs"></i>
@@ -120,37 +111,40 @@ const mobileMenuOpen = ref(false)
           </a>
 
           <!-- Wishlist -->
-          <a
-            href="#"
-            class="relative flex flex-col items-center text-brown hover:text-primary transition-colors"
-          >
+          <a href="#" class="relative flex gap-3 items-center hover:text-primary transition-colors">
             <span class="relative">
               <i class="bi bi-heart text-2xl"></i>
               <span
-                class="absolute -top-1.5 -right-2 bg-coral text-white text-[10px] leading-none rounded-full h-4 w-4 flex items-center justify-center"
+                class="absolute -top-1.5 -right-2 bg-coral text-white text-[12px] leading-none rounded-full h-4.5 w-4.5 flex items-center justify-center"
               >
                 {{ wishlistCount }}
               </span>
             </span>
-            <span class="hidden sm:block text-xs mt-0.5">Wishlist</span>
+            <span class="hidden sm:block text-[13px] font-medium mt-0.5">Wishlist</span>
           </a>
 
           <!-- Cart -->
-          <a
-            href="#"
-            class="relative flex flex-col items-center text-brown hover:text-primary transition-colors"
-          >
+          <a href="#" class="relative flex gap-3 items-center hover:text-primary transition-colors">
             <span class="relative">
               <i class="bi bi-bag text-2xl"></i>
               <span
-                class="absolute -top-1.5 -right-2 bg-coral text-white text-[10px] leading-none rounded-full h-4 w-4 flex items-center justify-center"
+                class="absolute -top-1.5 -right-2 bg-coral text-white text-[10px] leading-none rounded-full h-4.5 w-4.5 flex items-center justify-center"
               >
                 {{ cartCount }}
               </span>
             </span>
-            <span class="hidden sm:block text-xs mt-0.5">Cart</span>
+            <span class="hidden sm:block text-[13px] font-medium mt-0.5">Cart</span>
           </a>
         </div>
+
+        <!-- Mobile menu toggle -->
+        <button
+          class="lg:hidden text-brown text-2xl shrink-0"
+          @click="mobileMenuOpen = !mobileMenuOpen"
+          aria-label="Toggle menu"
+        >
+          <i class="bi" :class="mobileMenuOpen ? 'bi-x-lg' : 'bi-list'"></i>
+        </button>
       </div>
 
       <!-- Mobile search bar -->
