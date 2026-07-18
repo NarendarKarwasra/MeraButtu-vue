@@ -1,4 +1,9 @@
 <script setup>
+import { ref } from 'vue'
+import { useDevice } from '@/stores/devive.js'
+
+const { isMobile } = useDevice()
+
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 
 // Header Icons
@@ -7,6 +12,10 @@ import safeIcon from '@/assets/images/icons/safe-icon.webp'
 import premiumIcon from '@/assets/images/icons/premium-icon.webp'
 import returnIcon from '@/assets/images/icons/return-icon.webp'
 import supportIcon from '@/assets/images/icons/support-icon.webp'
+
+// hero
+import heroDesktop from '@/assets/images/hero-main.webp'
+import heroMobile from '@/assets/images/hero-main-mobile-view.webp'
 
 // Categories
 import catFashion from '@/assets/images/cat-fashion.webp'
@@ -60,37 +69,41 @@ const trustPoints = [
 ]
 
 const categories = [
-  { name: 'Fashion', icon: catFashion, bg: 'bg-primary/10' },
-  { name: 'Toys & Games', icon: catToy, bg: 'bg-accent/15' },
-  { name: 'Baby Care', icon: catBabyCare, bg: 'bg-secondary/10' },
-  { name: 'Feeding', icon: catFeeding, bg: 'bg-accent/10' },
-  { name: 'Nursery', icon: catNursery, bg: 'bg-primary/10' },
-  { name: 'Books & Learning', icon: catBooks, bg: 'bg-secondary/10' },
-  { name: 'Gear & Travel', icon: catGear, bg: 'bg-brown/5' },
-  { name: 'Gifts & More', icon: catGift, bg: 'bg-accent/15' },
+  { name: 'Fashion', icon: catFashion, bg: 'bg-[#feecec]' },
+  { name: 'Toys & Games', icon: catToy, bg: 'bg-[#fceee3]' },
+  { name: 'Baby Care', icon: catBabyCare, bg: 'bg-[#e8f4f4]' },
+  { name: 'Feeding', icon: catFeeding, bg: 'bg-[#fef5e6]' },
+  { name: 'Nursery', icon: catNursery, bg: 'bg-[#feecec]' },
+  { name: 'Books & Learning', icon: catBooks, bg: 'bg-[#f0f1f6]' },
+  { name: 'Gear & Travel', icon: catGear, bg: 'bg-[#feeee1]' },
+  { name: 'Gifts & More', icon: catGift, bg: 'bg-[#fbf5e7]' },
 ]
 
+const hoveredButton = ref(null)
 const promoBanners = [
   {
     title: 'New Born Essentials',
     subtitle: 'Everything for your little bundle of joy',
     image: newbornBanner,
-    bg: 'bg-primary/10',
-    accent: 'text-coral',
+    bg: 'bg-[#FBD2D4]',
+    color: '#e9645f',
+    hoverColor: '#d44d48',
   },
   {
     title: 'Trending Kids Fashion',
     subtitle: "Cute, comfy & colorful styles they'll love!",
     image: kidsBanner,
-    bg: 'bg-accent/15',
-    accent: 'text-accent',
+    bg: 'bg-[#feecc6]',
+    color: '#df850b',
+    hoverColor: '#c77300',
   },
   {
     title: 'Play. Learn. Grow',
     subtitle: 'Fun toys & games for every little explorer',
     image: toysBanner,
-    bg: 'bg-secondary/10',
-    accent: 'text-secondary',
+    bg: 'bg-[#BDE0DB]',
+    color: '#31a493',
+    hoverColor: '#1c7c6e',
   },
 ]
 
@@ -128,7 +141,7 @@ const ageGroups = [
       <section class="mx-auto">
         <div class="w-full overflow-hidden">
           <img
-            src="../assets/images/hero-main.webp"
+            :src="isMobile ? heroMobile : heroDesktop"
             alt="Everything they need, all in one happy place"
             class="w-full h-auto object-cover"
           />
@@ -138,54 +151,62 @@ const ageGroups = [
       <!-- Trust Bar -->
       <section class="relative z-10 mx-auto max-w-350 px-4 mt-4 sm:-mt-6">
         <div
-          class="bg-white rounded-2xl shadow-sm border border-gray-100 px-4 sm:px-8 py-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-y-6 gap-x-4"
+          class="features bg-white rounded-2xl shadow-sm border border-gray-100 px-4 sm:px-8 py-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-y-6 gap-x-4"
         >
           <div v-for="point in trustPoints" :key="point.title" class="flex items-center gap-3">
-            <img :src="point.icon" alt="" class="h-8 w-8 object-contain shrink-0" />
+            <img :src="point.icon" alt="" class="h-8 w-auto object-contain shrink-0" />
             <div class="leading-tight">
-              <p class="text-sm font-semibold text-brown">{{ point.title }}</p>
-              <p class="text-xs text-gray-500">{{ point.subtitle }}</p>
+              <p class="text-[16px] font-semibold">{{ point.title }}</p>
+              <p class="text-[14px] mt-1 text-gray-500">{{ point.subtitle }}</p>
             </div>
           </div>
         </div>
       </section>
 
       <!-- Shop by Category -->
-      <section class="mx-auto max-w-350 px-4 mt-10 sm:mt-14">
+      <section class="mx-auto max-w-350 px-4 mt-6 sm:mt-8">
         <div class="flex items-center justify-between mb-5">
-          <h2 class="flex items-center gap-2 text-xl sm:text-2xl font-bold text-brown">
+          <h2 class="flex items-center gap-2 text-xl sm:text-2xl font-semibold text-brown">
             Shop by Category
-            <i class="bi bi-heart-fill text-coral text-base"></i>
+            <i class="bi bi-heart-fill text-coral/70 text-base rotate-20 mt-2"></i>
           </h2>
-          <a href="#" class="hidden sm:block text-sm font-medium text-primary hover:underline">
+          <a
+            href="#"
+            class="hidden sm:flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+          >
             View All Categories
+            <i class="bi bi-chevron-right text-xs"></i>
           </a>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
+        <div class="category-grid grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
           <a
             v-for="cat in categories"
             :key="cat.name"
             href="#"
-            class="flex flex-col items-center gap-2 group"
+            class="flex flex-col items-center gap-2 group border-2 border-gray-200 rounded-2xl overflow-hidden"
           >
             <div
-              class="w-full aspect-square rounded-2xl flex items-center justify-center overflow-hidden"
+              class="w-full aspect-square flex flex-col items-center justify-center overflow-hidden"
               :class="cat.bg"
             >
-              <img :src="cat.icon" alt="" class="w-2/3 h-2/3 object-contain" />
+              <img
+                :src="cat.icon"
+                alt=""
+                class="w-auto h-2/3 object-contain group-hover:scale-110 transition-all duration-[0.3s]"
+              />
+              <span
+                class="text-sm font-medium mt-3 text-center group-hover:text-primary transition-colors duration-[0.3s]"
+              >
+                {{ cat.name }}
+              </span>
             </div>
-            <span
-              class="text-sm font-medium text-brown text-center group-hover:text-primary transition-colors"
-            >
-              {{ cat.name }}
-            </span>
           </a>
         </div>
 
         <a
           href="#"
-          class="sm:hidden mt-4 block text-center text-sm font-medium text-primary hover:underline"
+          class="sm:hidden block m-auto mt-4 text-center text-md font-medium py-1 w-50 rounded-lg bg-primary text-white hover:underline"
         >
           View All Categories
         </a>
@@ -193,38 +214,49 @@ const ageGroups = [
 
       <!-- Promo Banners -->
       <section class="mx-auto max-w-350 px-4 mt-8 sm:mt-10">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div
             v-for="banner in promoBanners"
             :key="banner.title"
-            class="relative rounded-2xl overflow-hidden p-6 flex items-center gap-4 min-h-35"
+            class="relative rounded-2xl overflow-hidden flex items-center gap-4"
             :class="banner.bg"
           >
+            <img
+              :src="banner.image"
+              alt=""
+              class="promo-banner-image w-40 h-auto sm:w-40 ml-4 object-contain"
+            />
+
             <div class="flex-1 relative z-10">
-              <h3 class="text-lg font-bold text-brown mb-1">{{ banner.title }}</h3>
-              <p class="text-sm text-gray-600 mb-3">{{ banner.subtitle }}</p>
+              <h3 class="text-xl font-semibold pt-1 mb-1" :style="{ color: banner.color }">
+                {{ banner.title }}
+              </h3>
+              <p class="text-sm text-gray-600 max-w-40 mb-2 leading-[1.1rem]">
+                {{ banner.subtitle }}
+              </p>
               <button
-                class="inline-flex items-center gap-1.5 text-white text-xs font-semibold rounded-full px-4 py-2 bg-primary hover:bg-primary/90 transition-colors"
+                class="inline-flex items-center mb-2 gap-1.5 text-white text-xs font-semibold rounded-full px-4 py-1.5 transition-all duration-300 cursor-pointer"
+                :style="{
+                  backgroundColor:
+                    hoveredButton === banner.title ? banner.hoverColor : banner.color,
+                }"
+                @mouseenter="hoveredButton = banner.title"
+                @mouseleave="hoveredButton = null"
               >
                 Explore Now
                 <i class="bi bi-chevron-right text-[10px]"></i>
               </button>
             </div>
-            <img
-              :src="banner.image"
-              alt=""
-              class="w-24 h-24 sm:w-28 sm:h-28 object-contain shrink-0"
-            />
           </div>
         </div>
       </section>
 
       <!-- Shop by Age -->
-      <section class="mx-auto max-w-350 px-4 mt-10 sm:mt-14 mb-12">
+      <section class="mx-auto max-w-350 px-4 mt-6 sm:mt-8 mb-12">
         <div class="flex items-center justify-between mb-5">
-          <h2 class="flex items-center gap-2 text-xl sm:text-2xl font-bold text-brown">
+          <h2 class="flex items-center gap-2 text-xl sm:text-2xl font-semibold text-brown">
             Shop by Age
-            <i class="bi bi-heart-fill text-coral text-base"></i>
+            <i class="bi bi-heart-fill text-coral/70 text-base rotate-20 mt-2"></i>
           </h2>
           <a
             href="#"
@@ -235,19 +267,26 @@ const ageGroups = [
           </a>
         </div>
 
-        <div class="flex gap-3 overflow-x-auto no-scrollbar pb-1">
+        <div class="flex flex-wrap gap-3 pb-1">
           <a
             v-for="age in ageGroups"
             :key="age.label"
             href="#"
-            class="flex items-center gap-2 border border-gray-200 rounded-full pl-2 pr-4 py-2 shrink-0 hover:border-primary hover:bg-primary/5 transition-colors"
+            class="flex items-center gap-2 border border-gray-300 rounded-full px-4 sm:px-6 xl:px-10 py-2 shrink-0 hover:border-primary hover:bg-primary/20 transition-colors"
           >
-            <span class="h-8 w-8 rounded-full bg-gray-50 flex items-center justify-center shrink-0">
-              <img :src="age.icon" alt="" class="h-5 w-5 object-contain" />
+            <span class="h-6 w-6 rounded-full bg-gray-50 flex items-center justify-center shrink-0">
+              <img :src="age.icon" alt="" class="h-6 w-6 sm:h-7 sm:w-7 object-contain" />
             </span>
             <span class="text-sm font-medium text-brown whitespace-nowrap">{{ age.label }}</span>
           </a>
         </div>
+
+        <a
+          href="#"
+          class="sm:hidden block m-auto mt-4 text-center text-md font-medium py-1 w-40 rounded-lg bg-primary text-white hover:underline"
+        >
+          View All
+        </a>
       </section>
     </main>
   </DefaultLayout>

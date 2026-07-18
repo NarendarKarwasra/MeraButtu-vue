@@ -1,13 +1,20 @@
 <script setup>
 import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
+
+import { useDevice } from '@/stores/devive.js'
+
+const { isMobile } = useDevice()
 </script>
 
 <template>
-  <div class="min-h-screen bg-white">
+  <div class="min-h-screen flex flex-col bg-white">
     <Header />
 
-    <main>
+    <div class="flex-1" :class="isMobile ? 'pb-10' : ''">
       <slot />
-    </main>
+    </div>
+
+    <Footer :class="isMobile ? 'pb-18' : ''" />
   </div>
 </template>
