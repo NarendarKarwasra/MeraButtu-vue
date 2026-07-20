@@ -12,13 +12,13 @@ const shopLinks = [
 ]
 
 const customerServiceLinks = [
-  'Track Order',
-  'Returns & Refunds',
-  'Shipping Policy',
-  'Size Guide',
-  'FAQs',
-  'Store Locator',
-  'Contact Us',
+  { name: 'Track Order', url: '/track-order' },
+  { name: 'Returns & Refunds', url: '/returns-refunds' },
+  { name: 'Shipping Policy', url: '/shipping-policy' },
+  { name: 'Size Guide', url: '/size-guide' },
+  { name: 'FAQs', url: '/faqs' },
+  { name: 'Store Locator', url: '/store-locator' },
+  { name: 'Contact Us', url: '/contact-us' },
 ]
 
 const accountLinks = ['My Account', 'Orders', 'Wishlist', 'Addresses', 'Coupons']
@@ -43,9 +43,9 @@ const paymentIcons = [paymentIcons1, paymentIcons2, paymentIcons3, paymentIcons4
       <div class="footer-grid-container">
         <!-- Brand -->
         <div>
-          <a href="/" class="inline-block mb-4">
+          <RouterLink to="/" class="inline-block mb-4">
             <img src="../assets/images/merabuttu-logo.webp" alt="Mera Buttu" class="h-30 w-auto" />
-          </a>
+          </RouterLink>
           <p class="text-sm text-gray-600 leading-relaxed mb-6 max-w-60">
             India's most loved one-stop store for kids & infants. Everything they need, all in one
             happy place.
@@ -78,10 +78,13 @@ const paymentIcons = [paymentIcons1, paymentIcons2, paymentIcons3, paymentIcons4
         <div>
           <h3 class="text-sm font-bold tracking-wide mb-4">CUSTOMER SERVICE</h3>
           <ul class="space-y-2">
-            <li v-for="link in customerServiceLinks" :key="link">
-              <a href="#" class="text-sm text-gray-600 hover:text-primary transition-colors">
-                {{ link }}
-              </a>
+            <li v-for="link in customerServiceLinks" :key="link.name">
+              <RouterLink
+                :to="link.url"
+                class="text-sm text-gray-600 hover:text-primary transition-colors"
+              >
+                {{ link.name }}
+              </RouterLink>
             </li>
           </ul>
         </div>

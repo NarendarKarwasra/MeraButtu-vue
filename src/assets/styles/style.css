@@ -26,6 +26,15 @@
 }
 
 
+.contact-form-section {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+}
+
+.form-submit-btn {
+    border-radius: 10px 50px 50px 10px;
+}
+
 
 @media (max-width: 1024px) {
     .footer-grid-container {
@@ -36,6 +45,10 @@
 @media (max-width: 700px) {
     .footer-grid-container {
         grid-template-columns: 1fr 0.7fr;
+    }
+
+    .contact-form-section {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -64,6 +77,11 @@
 
     .footer-links-container ul li {
         margin-bottom: 6px;
+    }
+
+
+    .contact-trust-badge-section {
+        grid-template-columns: 1fr;
     }
 }
 
