@@ -63,7 +63,7 @@ const paymentIcons = [paymentIcons1, paymentIcons2, paymentIcons3, paymentIcons4
         </div>
 
         <!-- Shop -->
-        <div>
+        <div class="footer-links-container">
           <h3 class="text-sm font-bold tracking-wide mb-4">SHOP</h3>
           <ul class="space-y-2">
             <li v-for="link in shopLinks" :key="link">
@@ -122,7 +122,7 @@ const paymentIcons = [paymentIcons1, paymentIcons2, paymentIcons3, paymentIcons4
           </form>
 
           <h3 class="text-sm font-bold tracking-wide mb-4">DOWNLOAD OUR APP</h3>
-          <div class="flex gap-3 sm:flex-row flex-col">
+          <div class="footer-download-buttons flex gap-3">
             <a href="#" target="_blank" rel="noopener noreferrer">
               <img
                 src="../assets/images/google-playstore-icon.webp"

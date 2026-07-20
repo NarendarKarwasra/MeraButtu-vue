@@ -252,7 +252,7 @@ const ageGroups = [
       </section>
 
       <!-- Shop by Age -->
-      <section class="mx-auto max-w-350 px-4 mt-6 sm:mt-8 mb-12">
+      <section class="mx-auto max-w-350 px-4 mt-6 sm:mt-8 mb-0 md:mb-8">
         <div class="flex items-center justify-between mb-5">
           <h2 class="flex items-center gap-2 text-xl sm:text-2xl font-semibold text-brown">
             Shop by Age

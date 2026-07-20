@@ -81,13 +81,13 @@ const isActive = (path) => computed(() => route.path === path).value
           <input
             type="text"
             placeholder="Search for products, brands and more..."
-            class="w-full rounded-full border border-gray-200 bg-gray-50 pl-5 pr-12 py-2.5 text-sm text-brown placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/40"
+            class="w-full rounded-full border border-gray-400 bg-gray-50 pl-5 pr-14 py-2.5 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary transition-colors"
           />
           <button
-            class="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-primary text-white flex items-center justify-center"
+            class="absolute right-1 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary/90 transition-colors cursor-pointer"
             aria-label="Search"
           >
-            <i class="bi bi-search text-sm"></i>
+            <i class="bi bi-search"></i>
           </button>
         </div>
       </div>
