@@ -11,10 +11,10 @@ const { isMobile } = useDevice()
   <div class="min-h-screen flex flex-col bg-white">
     <Header />
 
-    <div class="flex-1" :class="isMobile ? 'pb-10' : ''">
+    <div class="flex-1 pb-6">
       <slot />
     </div>
 
-    <Footer :class="isMobile ? 'pb-18' : ''" />
+    <Footer :class="isMobile ? 'pb-10' : ''" />
   </div>
 </template>

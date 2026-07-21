@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useDevice } from '@/stores/devive.js'
+import { useRouter } from 'vue-router'
 
 const { isMobile } = useDevice()
 
@@ -42,71 +43,286 @@ const navItems = [
 ]
 
 const isActive = (path) => computed(() => route.path === path).value
+
+const searchOpen = ref(false)
+const searchQuery = ref('')
+const searchInput = ref(null)
+const isListening = ref(false)
+
+// TODO: replace with a real API call (debounced) against your product/category search endpoint
+const searchIndex = [
+  'Baby Diapers',
+  'Feeding Bottles',
+  'Teddy Bear',
+  'Kids Fashion',
+  'Baby Care Combo',
+  'Toys & Games',
+  'Nursery Furniture',
+  'Books & Learning Kits',
+  'Baby Stroller',
+  'Gift Hampers',
+]
+
+const searchResults = computed(() => {
+  const q = searchQuery.value.trim().toLowerCase()
+  if (!q) return []
+  return searchIndex.filter((item) => item.toLowerCase().includes(q))
+})
+
+const openSearch = async () => {
+  searchOpen.value = true
+  // eslint-disable-next-line no-undef
+  await nextTick()
+  searchInput.value?.focus()
+}
+
+const closeSearch = () => {
+  searchOpen.value = false
+  searchQuery.value = ''
+  isListening.value = false
+}
+
+const selectResult = (term) => {
+  searchQuery.value = term
+  submitSearch()
+}
+
+const submitSearch = () => {
+  if (!searchQuery.value.trim()) return
+  // TODO: navigate to search results, e.g.
+  // router.push({ path: '/search', query: { q: searchQuery.value } })
+}
+
+// Voice search via the Web Speech API (Chrome/Android WebView support this;
+// falls back silently if the browser doesn't support it).
+const startVoiceSearch = () => {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+  if (!SpeechRecognition) {
+    console.warn('Voice search is not supported in this browser.')
+    return
+  }
+
+  const recognition = new SpeechRecognition()
+  recognition.lang = 'en-IN'
+  recognition.interimResults = false
+  recognition.maxAlternatives = 1
+
+  isListening.value = true
+
+  recognition.onresult = (event) => {
+    searchQuery.value = event.results[0][0].transcript
+  }
+  recognition.onerror = () => {
+    isListening.value = false
+  }
+  recognition.onend = () => {
+    isListening.value = false
+  }
+
+  recognition.start()
+}
+
+// for filter option
+const filterOpen = ref(false)
+const selectedFilters = ref([])
+
+const filterOptions = ['Medicines', 'Vitamins', 'Personal Care', 'Baby Care', 'Diabetes Care']
+
+const toggleFilter = (filter) => {
+  if (selectedFilters.value.includes(filter)) {
+    selectedFilters.value = selectedFilters.value.filter((item) => item !== filter)
+  } else {
+    selectedFilters.value.push(filter)
+  }
+}
+
+// slide account
+const router = useRouter()
+const openAuth = () => {
+  mobileMenuOpen.value = false
+  router.push('/login')
+}
 </script>
 
 <template>
+  <!-- mobile screen -->
   <header class="w-full" v-if="isMobile">
     <div class="sticky top-0 z-40 bg-white border-b border-gray-100">
-      <div class="flex items-center justify-between gap-3 px-3 py-2.5">
-        <!-- Logo -->
-        <a href="/" class="shrink-0">
-          <img :src="logo" alt="Mera Buttu" class="h-14 w-auto" />
-        </a>
-
-        <div class="flex-1"></div>
-
-        <!-- Cart -->
-        <a href="#" class="relative text-brown" aria-label="Cart">
-          <i class="bi bi-bag text-2xl"></i>
-          <span
-            class="absolute -top-1.5 -right-2 bg-coral text-white text-[10px] leading-none rounded-full h-4.5 w-4.5 flex items-center justify-center"
-          >
-            {{ cartCount }}
-          </span>
-        </a>
-
-        <!-- Hamburger -->
-        <button
-          class="text-brown text-2xl shrink-0"
-          @click="mobileMenuOpen = true"
-          aria-label="Open menu"
-        >
-          <i class="bi bi-list"></i>
-        </button>
-      </div>
-
-      <!-- Search bar -->
-      <div class="px-3 pb-2.5">
-        <div class="relative w-full">
-          <input
-            type="text"
-            placeholder="Search for products, brands and more..."
-            class="w-full rounded-full border border-gray-400 bg-gray-50 pl-5 pr-14 py-2.5 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary transition-colors"
-          />
+      <div class="relative px-3 py-2.5">
+        <!-- Normal row: hamburger, logo, search icon, cart -->
+        <div class="flex items-center justify-between gap-3">
+          <!-- Hamburger -->
           <button
-            class="absolute right-1 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary/90 transition-colors cursor-pointer"
-            aria-label="Search"
+            class="text-gray-300 w-8 h-9 text-xl shrink-0 border rounded-lg"
+            @click="mobileMenuOpen = true"
+            aria-label="Open menu"
           >
+            <i class="bi bi-list text-black"></i>
+          </button>
+
+          <!-- Logo -->
+          <a href="/" class="shrink-0">
+            <img :src="logo" alt="Mera Buttu" class="h-14 w-auto" />
+          </a>
+
+          <div class="flex-1"></div>
+
+          <!-- Search icon -->
+          <button class="text-brown text-xl shrink-0" aria-label="Open search" @click="openSearch">
             <i class="bi bi-search"></i>
           </button>
+
+          <!-- Cart -->
+          <a href="#" class="relative text-brown shrink-0" aria-label="Cart">
+            <i class="bi bi-bag text-2xl"></i>
+            <span
+              class="absolute -top-1.5 -right-2 bg-coral text-white text-[10px] leading-none rounded-full h-4.5 w-4.5 flex items-center justify-center"
+            >
+              {{ cartCount }}
+            </span>
+          </a>
         </div>
+
+        <!-- Search overlay -->
+        <Transition name="slide-left">
+          <div v-if="searchOpen" class="fixed inset-0 bg-white z-50 flex flex-col">
+            <form
+              class="relative flex items-center gap-3 border-b border-gray-100 px-3 py-2.5 shrink-0"
+              @submit.prevent="submitSearch"
+            >
+              <button
+                type="button"
+                class="text-2xl text-brown shrink-0"
+                aria-label="Close search"
+                @click="closeSearch"
+              >
+                <i class="bi bi-arrow-left"></i>
+              </button>
+
+              <input
+                ref="searchInput"
+                v-model="searchQuery"
+                type="text"
+                placeholder="Search medicines & health..."
+                class="flex-1 min-w-0 bg-transparent border-0 text-base text-brown placeholder:text-gray-400 focus:outline-none focus:ring-0"
+              />
+
+              <button
+                type="button"
+                class="shrink-0 h-9 w-9 rounded-full bg-brown text-white flex items-center justify-center"
+                :class="isListening ? 'animate-pulse' : ''"
+                aria-label="Search by voice"
+                @click="startVoiceSearch"
+              >
+                <i class="bi bi-mic-fill text-sm"></i>
+              </button>
+
+              <!-- Filter button -->
+              <button
+                type="button"
+                class="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-300 text-brown"
+                aria-label="Open search filters"
+                @click="filterOpen = !filterOpen"
+              >
+                <i class="bi bi-sliders2 text-md"></i>
+
+                <span
+                  v-if="selectedFilters.length"
+                  class="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-white"
+                >
+                  {{ selectedFilters.length }}
+                </span>
+              </button>
+
+              <!-- Filter dropdown -->
+              <div
+                v-if="filterOpen"
+                class="absolute right-3 top-14 z-20 w-64 rounded-xl border border-gray-100 bg-white p-3 shadow-lg"
+              >
+                <div class="mb-3 flex items-center justify-between">
+                  <p class="text-sm font-semibold text-brown">Filter by category</p>
+
+                  <button
+                    v-if="selectedFilters.length"
+                    type="button"
+                    class="text-xs font-medium text-primary"
+                    @click="selectedFilters = []"
+                  >
+                    Clear all
+                  </button>
+                </div>
+
+                <label
+                  v-for="filter in filterOptions"
+                  :key="filter"
+                  class="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 hover:bg-gray-50"
+                >
+                  <input
+                    type="checkbox"
+                    :checked="selectedFilters.includes(filter)"
+                    class="h-4 w-4 accent-primary"
+                    @change="toggleFilter(filter)"
+                  />
+
+                  <span class="text-sm text-gray-700">{{ filter }}</span>
+                </label>
+
+                <button
+                  type="button"
+                  class="mt-3 w-full rounded-lg bg-primary py-2 text-sm font-semibold text-white"
+                  @click="filterOpen = false"
+                >
+                  Apply Filters
+                </button>
+              </div>
+            </form>
+
+            <!-- Results fill the rest of the screen -->
+            <div class="flex-1 overflow-y-auto">
+              <ul v-if="searchQuery.trim() && searchResults.length">
+                <li v-for="term in searchResults" :key="term">
+                  <button
+                    type="button"
+                    class="w-full flex items-center gap-3 px-4 py-3 text-left text-sm text-brown hover:bg-gray-50 transition-colors"
+                    @click="selectResult(term)"
+                  >
+                    <i class="bi bi-search text-gray-400"></i>
+                    <span>{{ term }}</span>
+                  </button>
+                </li>
+              </ul>
+              <p v-else-if="searchQuery.trim()" class="px-4 py-6 text-center text-sm text-gray-400">
+                No results for "{{ searchQuery }}"
+              </p>
+            </div>
+          </div>
+        </Transition>
       </div>
     </div>
 
     <!-- Slide-out menu (hamburger drawer) -->
-    <Transition name="fade">
-      <div
-        v-if="mobileMenuOpen"
-        class="fixed inset-0 z-50 bg-black/40"
-        @click.self="mobileMenuOpen = false"
-      >
+    <Transition name="slide-right">
+      <div v-if="mobileMenuOpen" class="fixed inset-0 z-50" @click.self="mobileMenuOpen = false">
         <div class="bg-white w-72 h-full shadow-xl p-5 overflow-y-auto">
-          <div class="flex items-center justify-between mb-6">
-            <img :src="logo" alt="Mera Buttu" class="h-10 w-auto" />
-            <button @click="mobileMenuOpen = false" class="text-2xl text-brown">
-              <i class="bi bi-x-lg"></i>
-            </button>
-          </div>
+          <button
+            type="button"
+            class="mb-5 flex w-full items-center gap-3 border-b border-gray-200 pb-5 text-left"
+            @click="openAuth"
+          >
+            <div
+              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-gray-300 bg-orange-50 text-2xl text-brown"
+            >
+              <i class="bi bi-person"></i>
+            </div>
+
+            <div class="flex-1">
+              <p class="text-xl font-semibold leading-tight text-gray-900">Hi, there!</p>
+
+              <p class="mt-1 text-sm text-gray-600">Login / Sign Up</p>
+            </div>
+
+            <i class="bi bi-chevron-right text-xl text-gray-700"></i>
+          </button>
 
           <a
             v-for="cat in categories"
@@ -135,9 +351,10 @@ const isActive = (path) => computed(() => route.path === path).value
     </Transition>
   </header>
 
+  <!-- web screen -->
   <header class="w-full" v-else>
     <!-- Top Utility Bar -->
-    <div class="bg-(--color-primary-light) border-b border-accent/20 text-black text-xs sm:text-sm">
+    <div class="bg-primary-light border-b border-accent/20 text-black text-xs sm:text-sm">
       <div class="mx-auto max-w-350 px-4 py-2 flex items-center justify-between gap-4">
         <p class="flex items-center gap-2 truncate">
           <i class="bi bi-gift text-primary text-base shrink-0"></i>
@@ -222,7 +439,7 @@ const isActive = (path) => computed(() => route.path === path).value
             <span class="relative">
               <i class="bi bi-bag text-2xl"></i>
               <span
-                class="absolute -top-1.5 -right-2 bg-coral text-white text-[12px] font-[600] leading-none rounded-full h-4.5 w-4.5 flex items-center justify-center"
+                class="absolute -top-1.5 -right-2 bg-coral text-white text-[12px] font-semibold leading-none rounded-full h-4.5 w-4.5 flex items-center justify-center"
               >
                 {{ cartCount }}
               </span>
@@ -261,6 +478,7 @@ const isActive = (path) => computed(() => route.path === path).value
     </div>
   </header>
 
+  <!-- bottom nav for mobile screen -->
   <nav
     v-if="isMobile"
     class="fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-100 shadow-[0_-2px_10px_rgba(0,0,0,0.04)]"
@@ -285,7 +503,6 @@ const isActive = (path) => computed(() => route.path === path).value
             {{ wishlistCount }}
           </span>
         </span>
-        <span>{{ item.label }}</span>
       </router-link>
     </div>
   </nav>

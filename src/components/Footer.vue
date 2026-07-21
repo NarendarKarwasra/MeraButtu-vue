@@ -38,11 +38,11 @@ const paymentIcons = [paymentIcons1, paymentIcons2, paymentIcons3, paymentIcons4
 </script>
 
 <template>
-  <footer class="bg-[#fff0e7] border-t border-accent/20">
-    <div class="mx-auto max-w-350 px-4 sm:px-6 py-10">
+  <footer v-reveal class="bg-[#fff0e7] border-t border-accent/20">
+    <div class="footer-main-container mx-auto max-w-350 px-4 sm:px-6 py-10">
       <div class="footer-grid-container">
         <!-- Brand -->
-        <div>
+        <div v-reveal>
           <RouterLink to="/" class="inline-block mb-4">
             <img src="../assets/images/merabuttu-logo.webp" alt="Mera Buttu" class="h-30 w-auto" />
           </RouterLink>
@@ -50,7 +50,7 @@ const paymentIcons = [paymentIcons1, paymentIcons2, paymentIcons3, paymentIcons4
             India's most loved one-stop store for kids & infants. Everything they need, all in one
             happy place.
           </p>
-          <div class="flex items-center gap-3 max-w-60">
+          <div class="footer-social-box flex items-center gap-3 max-w-60">
             <a
               v-for="social in socialLinks"
               :key="social.icon"
@@ -63,7 +63,7 @@ const paymentIcons = [paymentIcons1, paymentIcons2, paymentIcons3, paymentIcons4
         </div>
 
         <!-- Shop -->
-        <div class="footer-links-container">
+        <div v-reveal class="footer-links-container">
           <h3 class="text-sm font-bold tracking-wide mb-4">SHOP</h3>
           <ul class="space-y-2">
             <li v-for="link in shopLinks" :key="link">
@@ -75,7 +75,7 @@ const paymentIcons = [paymentIcons1, paymentIcons2, paymentIcons3, paymentIcons4
         </div>
 
         <!-- Customer Service -->
-        <div>
+        <div v-reveal>
           <h3 class="text-sm font-bold tracking-wide mb-4">CUSTOMER SERVICE</h3>
           <ul class="space-y-2">
             <li v-for="link in customerServiceLinks" :key="link.name">
@@ -90,7 +90,7 @@ const paymentIcons = [paymentIcons1, paymentIcons2, paymentIcons3, paymentIcons4
         </div>
 
         <!-- My Account -->
-        <div>
+        <div v-reveal>
           <h3 class="text-sm font-bold tracking-wide mb-4">MY ACCOUNT</h3>
           <ul class="space-y-2">
             <li v-for="link in accountLinks" :key="link">
@@ -102,7 +102,7 @@ const paymentIcons = [paymentIcons1, paymentIcons2, paymentIcons3, paymentIcons4
         </div>
 
         <!-- Newsletter + App Download -->
-        <div>
+        <div v-reveal>
           <h3 class="text-sm font-bold tracking-wide mb-4">NEWSLETTER</h3>
           <p class="text-sm text-gray-600 mb-6 max-w-60">
             Subscribe to get special offers, new arrivals & parenting tips.
@@ -146,7 +146,7 @@ const paymentIcons = [paymentIcons1, paymentIcons2, paymentIcons3, paymentIcons4
     </div>
 
     <!-- Bottom bar -->
-    <div class="border-t border-accent/20">
+    <div v-reveal class="border-t border-accent/20">
       <div
         class="mx-auto max-w-350 px-4 sm:px-6 py-4 flex flex-col lg:flex-row items-center justify-between gap-3 text-xs sm:text-sm text-gray-600"
       >
