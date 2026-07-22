@@ -420,7 +420,7 @@ const openAuth = () => {
         <!-- Right actions -->
         <div class="flex items-center gap-4 sm:gap-4 lg:gap-10">
           <!-- Account -->
-          <a href="#" class="flex items-center gap-2 hover:text-primary transition-colors">
+          <a href="/account" class="flex items-center gap-2 hover:text-primary transition-colors">
             <i class="bi bi-person text-3xl"></i>
             <span class="leading-tight text-left">
               <span class="block text-[12px] text-gray-700">Login / Signup</span>
