@@ -168,15 +168,25 @@ const openAuth = () => {
           <div class="flex-1"></div>
 
           <!-- Search icon -->
-          <button class="text-brown text-xl shrink-0" aria-label="Open search" @click="openSearch">
-            <i class="bi bi-search"></i>
+          <button
+            class="w-9 h-9 rounded-full border border-gray-300 bg-white flex items-center justify-center text-black shrink-0"
+            aria-label="Open search"
+            @click="openSearch"
+          >
+            <i class="bi bi-search text-[16px]"></i>
           </button>
 
           <!-- Cart -->
-          <a href="#" class="relative text-brown shrink-0" aria-label="Cart">
-            <i class="bi bi-bag text-2xl"></i>
+          <a
+            href="#"
+            class="relative w-9 h-9 rounded-full border border-gray-300 bg-white flex items-center justify-center text-black shrink-0"
+            aria-label="Cart"
+          >
+            <i class="bi bi-bag text-[16px]"></i>
+
             <span
-              class="absolute -top-1.5 -right-2 bg-coral text-white text-[10px] leading-none rounded-full h-4.5 w-4.5 flex items-center justify-center"
+              v-if="cartCount"
+              class="absolute -top-1 -right-1 bg-coral text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center"
             >
               {{ cartCount }}
             </span>
