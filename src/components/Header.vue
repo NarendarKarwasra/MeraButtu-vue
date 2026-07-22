@@ -513,6 +513,9 @@ const openAuth = () => {
             {{ wishlistCount }}
           </span>
         </span>
+        <span class="leading-none">
+          {{ item.label }}
+        </span>
       </router-link>
     </div>
   </nav>
