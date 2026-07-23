@@ -1,8 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useDevice } from '@/stores/devive.js'
-import { useRouter } from 'vue-router'
-
+//
 const { isMobile } = useDevice()
 
 import fashionIcon from '@/assets/images/icons/nav-fashion-icon.webp'
@@ -93,35 +92,6 @@ const submitSearch = () => {
   // router.push({ path: '/search', query: { q: searchQuery.value } })
 }
 
-// Voice search via the Web Speech API (Chrome/Android WebView support this;
-// falls back silently if the browser doesn't support it).
-const startVoiceSearch = () => {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-  if (!SpeechRecognition) {
-    console.warn('Voice search is not supported in this browser.')
-    return
-  }
-
-  const recognition = new SpeechRecognition()
-  recognition.lang = 'en-IN'
-  recognition.interimResults = false
-  recognition.maxAlternatives = 1
-
-  isListening.value = true
-
-  recognition.onresult = (event) => {
-    searchQuery.value = event.results[0][0].transcript
-  }
-  recognition.onerror = () => {
-    isListening.value = false
-  }
-  recognition.onend = () => {
-    isListening.value = false
-  }
-
-  recognition.start()
-}
-
 // for filter option
 const filterOpen = ref(false)
 const selectedFilters = ref([])
@@ -136,11 +106,26 @@ const toggleFilter = (filter) => {
   }
 }
 
-// slide account
-const router = useRouter()
-const openAuth = () => {
-  mobileMenuOpen.value = false
-  router.push('/login')
+const isLoggedIn = ref(false)
+const showAccountMenu = ref(false)
+const login = () => {
+  isLoggedIn.value = true
+}
+const logout = () => {
+  isLoggedIn.value = false
+  showAccountMenu.value = false
+}
+let closeMenuTimer
+
+const openAccountMenu = () => {
+  clearTimeout(closeMenuTimer)
+  showAccountMenu.value = true
+}
+
+const closeAccountMenu = () => {
+  closeMenuTimer = setTimeout(() => {
+    showAccountMenu.value = false
+  }, 250)
 }
 </script>
 
@@ -314,8 +299,8 @@ const openAuth = () => {
     <Transition name="slide-right">
       <div v-if="mobileMenuOpen" class="fixed inset-0 z-50" @click.self="mobileMenuOpen = false">
         <div class="bg-white w-72 h-full shadow-xl p-5 overflow-y-auto">
-          <button
-            type="button"
+          <RouterLink
+            to="/account"
             class="mb-5 flex w-full items-center gap-3 border-b border-gray-200 pb-5 text-left"
             @click="openAuth"
           >
@@ -332,7 +317,7 @@ const openAuth = () => {
             </div>
 
             <i class="bi bi-chevron-right text-xl text-gray-700"></i>
-          </button>
+          </RouterLink>
 
           <a
             v-for="cat in categories"
@@ -420,7 +405,10 @@ const openAuth = () => {
         <!-- Right actions -->
         <div class="flex items-center gap-4 sm:gap-4 lg:gap-10">
           <!-- Account -->
-          <a href="/account" class="flex items-center gap-2 hover:text-primary transition-colors">
+          <!-- <RouterLink
+            to="/account"
+            class="flex items-center gap-2 hover:text-primary transition-colors"
+          >
             <i class="bi bi-person text-3xl"></i>
             <span class="leading-tight text-left">
               <span class="block text-[12px] text-gray-700">Login / Signup</span>
@@ -429,7 +417,78 @@ const openAuth = () => {
                 <i class="bi bi-chevron-down text-xs"></i>
               </span>
             </span>
-          </a>
+          </RouterLink> -->
+
+          <!-- Not logged in -->
+          <button
+            v-if="!isLoggedIn"
+            type="button"
+            class="flex items-center gap-3 hover:text-primary transition-colors"
+            @click="login"
+          >
+            <i class="bi bi-box-arrow-in-right text-[30px]"></i>
+
+            <span class="leading-tight text-left">
+              <span class="block text-[12px] text-gray-700">Welcome</span>
+              <span class="text-sm font-medium">Login Now</span>
+            </span>
+          </button>
+
+          <!-- Logged in -->
+          <div v-else class="relative" @mouseenter="openAccountMenu" @mouseleave="closeAccountMenu">
+            <button
+              type="button"
+              class="flex items-center gap-2 text-[#d15951] hover:text-primary transition-colors"
+            >
+              <i class="bi bi-person-circle text-3xl"></i>
+
+              <span class="leading-tight text-left">
+                <span class="block text-[12px] text-gray-700">Welcome back</span>
+
+                <span class="flex items-center gap-1 text-sm font-medium">
+                  My Account
+                  <i
+                    class="bi bi-chevron-down text-xs transition-transform"
+                    :class="{ 'rotate-180': showAccountMenu }"
+                  ></i>
+                </span>
+              </span>
+            </button>
+
+            <div
+              v-if="showAccountMenu"
+              class="absolute right-0 z-50 mt-2 w-48 rounded-md border border-gray-200 bg-white py-1 shadow-lg"
+            >
+              <RouterLink to="/account" class="block px-4 py-2 text-sm hover:bg-gray-100">
+                My Profile
+              </RouterLink>
+
+              <RouterLink to="/orders" class="block px-4 py-2 text-sm hover:bg-gray-100">
+                My Orders
+              </RouterLink>
+
+              <RouterLink to="/account" class="block px-4 py-2 text-sm hover:bg-gray-100">
+                Whishlist
+              </RouterLink>
+
+              <RouterLink to="/orders" class="block px-4 py-2 text-sm hover:bg-gray-100">
+                Addresses
+              </RouterLink>
+
+              <RouterLink to="/orders" class="block px-4 py-2 text-sm hover:bg-gray-100">
+                Coupons
+              </RouterLink>
+
+              <button
+                type="button"
+                class="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 cursor-pointer"
+                @click="logout"
+              >
+                <i class="bi bi-box-arrow-right mr-2"></i>
+                Logout
+              </button>
+            </div>
+          </div>
 
           <!-- Wishlist -->
           <a href="#" class="relative flex gap-3 items-center hover:text-primary transition-colors">

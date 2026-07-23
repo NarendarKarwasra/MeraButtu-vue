@@ -260,6 +260,16 @@ no-scrollbar {
     flex-direction: column;
     align-items: start;
   }
+
+  /* account page */
+  .need-help-bar-container {
+    grid-template-columns: 1fr;
+    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
 }
 
 @media (max-width: 400px) {

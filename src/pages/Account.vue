@@ -170,6 +170,42 @@ const isActive = (path) => route.path === path
 const handleLogout = () => {
   console.log('Logging out...')
 }
+
+// trust points  Icons
+import shippingIcon from '@/assets/images/icons/shipping-icon.webp'
+import safeIcon from '@/assets/images/icons/safe-icon.webp'
+import premiumIcon from '@/assets/images/icons/premium-icon.webp'
+import returnIcon from '@/assets/images/icons/return-icon.webp'
+import supportIcon from '@/assets/images/icons/support-icon.webp'
+const trustPoints = [
+  {
+    icon: shippingIcon,
+    title: 'Free Shipping',
+    subtitle: 'On orders above ₹999',
+  },
+  {
+    icon: safeIcon,
+    title: '100% Safe & Secure',
+    subtitle: 'Secure payments',
+  },
+  {
+    icon: premiumIcon,
+    title: 'Premium Quality',
+    subtitle: 'For your little ones',
+  },
+  {
+    icon: returnIcon,
+    title: 'Easy Returns',
+    subtitle: 'Hassle free returns',
+  },
+  {
+    icon: supportIcon,
+    title: '24x7 Support',
+    subtitle: 'We are here to help',
+  },
+]
+
+const whatsappLink = 'https://wa.me/918982123458'
 </script>
 
 <template>
@@ -215,7 +251,7 @@ const handleLogout = () => {
 
             <button
               type="button"
-              class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-coral hover:bg-coral/5 transition-colors"
+              class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-coral hover:bg-coral/5 transition-colors cursor-pointer"
               @click="handleLogout"
             >
               <i class="bi bi-box-arrow-right"></i>
@@ -236,7 +272,7 @@ const handleLogout = () => {
               <h2 class="text-lg font-semibold text-brown mt-3">Need Help?</h2>
               <p class="text-sm text-gray-600">We're here for you!</p>
               <button
-                class="shrink-0 inline-flex items-center gap-1 mt-3 rounded-lg text-sm font-semibold px-6 py-2 transition-colors bg-coral/20 text-coral"
+                class="shrink-0 inline-flex items-center gap-1 mt-3 rounded-lg text-sm font-semibold px-6 py-2 transition-colors bg-coral/20 text-coral cursor-pointer"
               >
                 <span class="hidden sm:inline">Contact Support</span>
                 <i class="bi bi-chevron-right text-xs pl-2"></i>
@@ -378,6 +414,57 @@ const handleLogout = () => {
           </div>
         </div>
       </div>
+
+      <!-- Trust Bar -->
+      <section v-reveal class="relative z-10 mx-auto mt-8">
+        <div
+          class="features bg-white rounded-2xl shadow-sm border border-gray-100 px-4 sm:px-8 py-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-y-6 gap-x-4"
+        >
+          <div v-for="point in trustPoints" :key="point.title" class="flex items-center gap-3">
+            <img :src="point.icon" alt="" class="h-8 w-auto object-contain shrink-0" />
+            <div class="leading-tight">
+              <p class="text-[16px] font-semibold">{{ point.title }}</p>
+              <p class="text-[14px] mt-1 text-gray-500">{{ point.subtitle }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- need help bar -->
+      <section v-reveal class="mx-auto max-w-350 mt-8">
+        <div
+          class="need-help-bar-container relative overflow-hidden rounded-2xl bg-primary/10 grid grid-cols-2 items-center gap-6 px-6 md:px-30 py-2"
+        >
+          <div class="py-1">
+            <h2 class="text-2xl md:text-3xl font-bold text-brown mb-2">Still Need Help?</h2>
+            <p class="text-md md:text-[17px] text-gray-600 leading-[1.3] mb-5">
+              Our happy team is just a message away.<br />
+              We love hearing from you!
+            </p>
+
+            <a
+              :href="whatsappLink"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 rounded-lg bg-brown text-white text-sm md:text-md font-semibold px-5 py-1 hover:bg-brown/90 transition-colors"
+            >
+              <i class="bi bi-headset text-lg md:text-xl"></i>
+              Chat with Us
+            </a>
+          </div>
+
+          <img
+            src="../assets/images/help-badge.webp"
+            alt="Our support team is here to help"
+            class="h-30 lg:h-48 w-auto object-contain justify-self-end"
+          />
+          <img
+            src="../assets/images/prop-rocket.webp"
+            alt=""
+            class="hidden lg:block absolute top-1/6 left-2/5 h-20 lg:h-30"
+          />
+        </div>
+      </section>
     </section>
   </DefaultLayout>
 </template>
