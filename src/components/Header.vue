@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useDevice } from '@/stores/devive.js'
 //
 const { isMobile } = useDevice()
@@ -16,7 +16,7 @@ import offerIcon from '@/assets/images/icons/nav-offer-icon.webp'
 import logo from '@/assets/images/merabuttu-logo.webp'
 
 const categories = [
-  { name: 'Fashion', icon: fashionIcon },
+  { name: 'Fashion', icon: fashionIcon, link: '/fashion' },
   { name: 'Toys & Games', icon: toyIcon },
   { name: 'Baby Care', icon: babyCareIcon },
   { name: 'Feeding', icon: feedingIcon },
@@ -31,7 +31,6 @@ const wishlistCount = ref(14)
 const cartCount = ref(2)
 const mobileMenuOpen = ref(false)
 
-import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 const navItems = [
@@ -92,19 +91,47 @@ const submitSearch = () => {
   // router.push({ path: '/search', query: { q: searchQuery.value } })
 }
 
+const words = [
+  'Fashion',
+  'Toys & Games',
+  'Baby Care',
+  'Feeding',
+  'Nursery',
+  'Books & Learning',
+  'Gear & Travel',
+  'Gifts & More',
+  'Offers',
+]
+
+const index = ref(0)
+
+const currentWord = computed(() => words[index.value])
+
+let interval
+
+onMounted(() => {
+  interval = setInterval(() => {
+    index.value = (index.value + 1) % words.length
+  }, 2200)
+})
+
+onBeforeUnmount(() => {
+  clearInterval(interval)
+})
+
 // for filter option
-const filterOpen = ref(false)
-const selectedFilters = ref([])
+// const filterOpen = ref(false)
+// const selectedFilters = ref([])
 
-const filterOptions = ['Medicines', 'Vitamins', 'Personal Care', 'Baby Care', 'Diabetes Care']
+// const filterOptions = ['Medicines', 'Vitamins', 'Personal Care', 'Baby Care', 'Diabetes Care']
 
-const toggleFilter = (filter) => {
-  if (selectedFilters.value.includes(filter)) {
-    selectedFilters.value = selectedFilters.value.filter((item) => item !== filter)
-  } else {
-    selectedFilters.value.push(filter)
-  }
-}
+// const toggleFilter = (filter) => {
+//   if (selectedFilters.value.includes(filter)) {
+//     selectedFilters.value = selectedFilters.value.filter((item) => item !== filter)
+//   } else {
+//     selectedFilters.value.push(filter)
+//   }
+// }
 
 const isLoggedIn = ref(false)
 const showAccountMenu = ref(false)
@@ -182,7 +209,7 @@ const closeAccountMenu = () => {
         <Transition name="slide-left">
           <div v-if="searchOpen" class="fixed inset-0 bg-white z-50 flex flex-col">
             <form
-              class="relative flex items-center gap-3 border-b border-gray-100 px-3 py-2.5 shrink-0"
+              class="relative flex items-center gap-3 border-b border-gray-300 bg-gray-100 px-3 py-2.5 shrink-0"
               @submit.prevent="submitSearch"
             >
               <button
@@ -199,7 +226,7 @@ const closeAccountMenu = () => {
                 v-model="searchQuery"
                 type="text"
                 placeholder="Search medicines & health..."
-                class="flex-1 min-w-0 bg-transparent border-0 text-base text-brown placeholder:text-gray-400 focus:outline-none focus:ring-0"
+                class="flex-1 min-w-0 border-0 text-base text-brown placeholder:text-gray-400 focus:outline-none focus:ring-0"
               />
 
               <button
@@ -213,7 +240,7 @@ const closeAccountMenu = () => {
               </button>
 
               <!-- Filter button -->
-              <button
+              <!-- <button
                 type="button"
                 class="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-300 text-brown"
                 aria-label="Open search filters"
@@ -227,10 +254,10 @@ const closeAccountMenu = () => {
                 >
                   {{ selectedFilters.length }}
                 </span>
-              </button>
+              </button> -->
 
               <!-- Filter dropdown -->
-              <div
+              <!-- <div
                 v-if="filterOpen"
                 class="absolute right-3 top-14 z-20 w-64 rounded-xl border border-gray-100 bg-white p-3 shadow-lg"
               >
@@ -269,7 +296,7 @@ const closeAccountMenu = () => {
                 >
                   Apply Filters
                 </button>
-              </div>
+              </div> -->
             </form>
 
             <!-- Results fill the rest of the screen -->
@@ -387,16 +414,43 @@ const closeAccountMenu = () => {
           <!-- Search bar -->
           <div class="flex flex-1 max-w-2xl">
             <div class="relative w-full">
-              <input
-                type="text"
-                placeholder="Search for products, brands and more..."
-                class="w-full rounded-full border border-gray-400 bg-gray-50 pl-5 pr-14 py-2.5 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary transition-colors"
-              />
-              <button
-                class="absolute right-1 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary/90 transition-colors cursor-pointer"
-                aria-label="Search"
-              >
+              <!-- Search Icon -->
+              <div class="absolute top-1/2 left-3 -translate-y-1/2 text-gray-500 z-20">
                 <i class="bi bi-search"></i>
+              </div>
+
+              <!-- Animated Placeholder -->
+              <div
+                v-if="!searchQuery"
+                class="absolute left-9 top-1/2 -translate-y-1/2 pointer-events-none flex items-center text-sm z-10"
+              >
+                <span class="text-gray-500 mr-1">Search for</span>
+
+                <div class="relative h-5 w-44 overflow-hidden">
+                  <transition name="slide-up" mode="out-in">
+                    <span
+                      :key="currentWord"
+                      class="absolute left-0 whitespace-nowrap font-small text-gray-600"
+                    >
+                      {{ currentWord }}
+                    </span>
+                  </transition>
+                </div>
+              </div>
+
+              <!-- Input -->
+              <input
+                ref="searchInput"
+                v-model="searchQuery"
+                type="text"
+                class="w-full rounded-lg border border-gray-400 bg-gray-50 pl-9 pr-14 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary transition-colors"
+              />
+
+              <!-- Mic -->
+              <button
+                class="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 text-xl text-gray-600 flex items-center justify-center hover:text-primary transition-colors"
+              >
+                <i class="bi bi-mic-fill"></i>
               </button>
             </div>
           </div>
@@ -529,10 +583,10 @@ const closeAccountMenu = () => {
               <span>All Categories</span>
             </button>
 
-            <a
+            <RouterLink
               v-for="cat in categories"
               :key="cat.name"
-              href="#"
+              :to="cat.link"
               class="flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-full shrink-0 whitespace-nowrap transition-colors"
               :class="
                 cat.highlight ? 'text-coral hover:bg-coral/20' : 'text-brown hover:bg-brown/10'
@@ -540,7 +594,7 @@ const closeAccountMenu = () => {
             >
               <img :src="cat.icon" alt="" class="h-5 w-5 object-contain shrink-0" />
               <span>{{ cat.name }}</span>
-            </a>
+            </RouterLink>
           </div>
         </div>
       </nav>

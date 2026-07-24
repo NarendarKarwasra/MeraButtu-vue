@@ -22,6 +22,11 @@ const router = createRouter({
       name: 'account',
       component: AccountPage,
     },
+    {
+      path: '/fashion',
+      name: 'Fashion',
+      component: () => import('@/pages/ProductsCategory/Fashion.vue'),
+    },
   ],
   scrollBehavior() {
     return { top: 0, left: 0 }
